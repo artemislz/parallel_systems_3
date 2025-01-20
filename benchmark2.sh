@@ -1,5 +1,5 @@
 # Define the parameters
-N=(512 1024 2048 4096)
+N=(8192 16384 32768)
 NUM_PROCESSES=(1 4 16 64)
 RUNS=4
 

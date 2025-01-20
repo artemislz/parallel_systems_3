@@ -176,7 +176,9 @@ int main(int argc, char* argv[]) {
     MPI_Reduce(&scatter_time, &max_scatter_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     MPI_Reduce(&reduce_time, &max_reduce_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     if (rank == 0) {
-        printf("%.4f %.4f %.4f %.4f %.4f\n", init_end - init_start, max_init_time, max_scatter_time, max_reduce_time, max_time);
+        printf("Init Time: %.4f, Max Init Time: %.4f, Max Scatter Time: %.4f, Max Reduce Time: %.4f, Max Time: %.4f\n", 
+       init_end - init_start, max_init_time, max_scatter_time, max_reduce_time, max_time);
+        //printf("%.4f %.4f %.4f %.4f %.4f\n", init_end - init_start, max_init_time, max_scatter_time, max_reduce_time, max_time);
         // printf("Matrix initialization time: %f seconds\n", (init_end - init_start));
         // printf("The slowest process took %f seconds to initialize\n", max_init_time);
         // printf("The slowest a process took %f seconds to scatter\n", max_scatter_time);
