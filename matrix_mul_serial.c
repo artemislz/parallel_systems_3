@@ -58,7 +58,7 @@ int main(int argc, char** argv){
     * [1 , 2 , 3 , 4 , 5 , 6 , 7, 8]
     */
     // print_vector(y, n, "y");
-    printf("Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+    printf("%f\n", (double)(end - start) / CLOCKS_PER_SEC);
     free(A);
     free(x);
     free(y);
