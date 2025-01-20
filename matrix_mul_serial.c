@@ -27,7 +27,7 @@ void print_vector(char* v, size_t n, char* name) {
 }
 
 int main(int argc, char** argv){
-    clock_t start, end;
+    clock_t start, end, start_init, end_init;
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <n>\n", argv[0]);
         return EXIT_FAILURE;
@@ -37,6 +37,15 @@ int main(int argc, char** argv){
     char* x = malloc(n * sizeof(char));
     long unsigned int* y = malloc(n * sizeof(long unsigned int));
     srand(17);
+    start_init = clock();
+    for (int i = 0; i < n; i++) {
+        x[i] = rand() % 25;
+        y[i] = 0;
+        for (int j = 0; j < n; j++) {
+            A[i * n + j] = rand() % 25;
+        }
+    }
+    end_init = clock();
     // print_matrix(A, n, n);
     // print_vector(x, n, "x");
     start = clock();
@@ -52,7 +61,7 @@ int main(int argc, char** argv){
     * [1 , 2 , 3 , 4 , 5 , 6 , 7, 8]
     */
     // print_vector(y, n, "y");
-    printf("Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+    printf("%.4f %.4f\n", (double)(end_init - start_init) / CLOCKS_PER_SEC, (double)(end - start) / CLOCKS_PER_SEC);
     free(A);
     free(x);
     free(y);
