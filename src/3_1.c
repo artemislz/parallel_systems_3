@@ -84,9 +84,9 @@ int main(int argc, char *argv[]) {
         initialize_grid(grid, grid_size, grid_size);
         //print_grid(grid, grid_size, grid_size);
     }
-    if(rank == 0){
-        print_grid(grid, grid_size, grid_size);
-    }
+    // if(rank == 0){
+    //     print_grid(grid, grid_size, grid_size);
+    // }
        // Scatter the grid to all processes
     MPI_Scatter(grid, local_rows * grid_size, MPI_INT, current + grid_size, local_rows * grid_size, MPI_INT, 0, MPI_COMM_WORLD);
 
