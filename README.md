@@ -7,7 +7,7 @@ make 3_1_serial
 ### Παράλληλο:
 ```bash
 make 3_1    
-mpiexec -f <machines_file -n <proc_num> ./bin/3_1 <generations> <matrix_dim>
+mpiexec -f <machines_file> -n <proc_num> ./bin/3_1 <generations> <matrix_dim>
 ```
 ## Οδηγίες εκτέλεσης 3.2:
 ### Σειριακό:
@@ -18,6 +18,6 @@ make 3_2_serial
 ### Παράλληλο:
 ```bash
 make 3_2
-mpiexec -f <machines_file -n <proc_num> ./bin/3_2 <matrix_dim>
+mpiexec -f <machines_file> -n <proc_num> ./bin/3_2 <matrix_dim>
 ```
 
