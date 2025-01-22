@@ -92,14 +92,16 @@ int main(int argc, char* argv[]) {
     MPI_Reduce(&scatter, &max_scatter_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     MPI_Reduce(&reduce, &max_reduce_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     if (rank == 0) {
-        printf("Matr Init Time: %.4f, Max Init Time: %.4f, Max Scatter Time: %.4f, Max Reduce Time: %.4f, Max Time: %.4f\n",
+        double elapsed_matr = (double)(matr_e - matr_s)/CLOCKS_PER_SEC;
+        printf("Matr Init Time: %.4f, Max Init Time: %.4f, Max Scatter Time: %.4f, Max Reduce Time: %.4f, Max Comp Time: %.4f, Total Time: %.4f\n",
             // init, //matr init time, no need to find max only proc 0 computes it
-            (double)(matr_e - matr_s)/CLOCKS_PER_SEC, //matr init time, no need to find max only proc 0 computes it
+            elapsed_matr, //matr init time, no need to find max only proc 0 computes it
             // matr_e - matr_s,
             max_init_time,
             max_scatter_time,
             max_reduce_time,
-            max_time);
+            max_time,
+            elapsed_matr + max_time + max_init_time + max_scatter_time + max_reduce_time);
         //printf("%.4f %.4f %.4f %.4f %.4f\n", init_end - init_start, max_init_time, max_scatter_time, max_reduce_time, max_time);
         // printf("Matrix initialization time: %f seconds\n", (init_end - init_start));
         // printf("The slowest process took %f seconds to initialize\n", max_init_time);
