@@ -3,7 +3,7 @@
 #include <mpi.h>
 #include <time.h>
 #include <string.h>
-
+#include "timer.h"
 void initialize(char*, char*, size_t);
 void initialize_matrix(char*, size_t, size_t);
 void initialize_matrix_column(char*, size_t, size_t);
@@ -14,14 +14,14 @@ void print_vector(char*, size_t, char*);
 int main(int argc, char* argv[]) {
     char* A;
     char* x;
-    if (argc !=2 ) {
+    if (argc != 2) {
         fprintf(stderr, "Usage: %s <n>\n", argv[0]);
         return EXIT_FAILURE;
     }
     int rank, size;
     size_t n = atol(argv[1]);
-    double start_time=0, init=0,
-    scatter=0,reduce=0;    
+    double start_time = 0, init = 0,
+        scatter = 0, reduce = 0;
     clock_t start, end;
     start = clock();
     MPI_Init(&argc, &argv);
@@ -38,22 +38,28 @@ int main(int argc, char* argv[]) {
     char* local_x;
     local_a = malloc(n * local_n * sizeof(char));
     local_x = malloc(local_n * sizeof(char));
+    clock_t matr_s, matr_e;
+    // double matr_s, matr_e;
     if (rank == 0) {
         srand(17);
         A = malloc(n * n * sizeof(char));
         x = malloc(n * sizeof(char));
-        init -= MPI_Wtime();
+        // init -= MPI_Wtime();
+        matr_s = clock();
+        // GET_TIME(matr_s);
         initialize(A, x, n);
-        init += MPI_Wtime();
+        // GET_TIME(matr_e);
+        matr_e = clock();
+        // init += MPI_Wtime();
     }
     MPI_Barrier(MPI_COMM_WORLD);
     scatter -= MPI_Wtime();
     MPI_Scatter(A, local_n, coltype, local_a, n * local_n, MPI_CHAR, 0, MPI_COMM_WORLD);
-    scatter += MPI_Wtime();    
+    scatter += MPI_Wtime();
     MPI_Type_free(&col);
     MPI_Type_free(&coltype);
     MPI_Scatter(x, local_n, MPI_CHAR, local_x, local_n, MPI_CHAR, 0, MPI_COMM_WORLD);//doesnt cost anything
-    if(rank == 0){
+    if (rank == 0) {
         free(A);
         free(x);
     }
@@ -80,18 +86,20 @@ int main(int argc, char* argv[]) {
     double elapsed_time, init_time, scatter_time, reduce_time;
     double max_time, max_init_time, max_scatter_time, max_reduce_time;
     //MPI initialization time
-    init_time = (double)(end - start) / (double) CLOCKS_PER_SEC;
+    init_time = (double)(end - start) / (double)CLOCKS_PER_SEC;
     MPI_Reduce(&start_time, &max_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     MPI_Reduce(&init_time, &max_init_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     MPI_Reduce(&scatter, &max_scatter_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     MPI_Reduce(&reduce, &max_reduce_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     if (rank == 0) {
-        printf("Matr Init Time: %.4f, Max Init Time: %.4f, Max Scatter Time: %.4f, Max Reduce Time: %.4f, Max Time: %.4f\n", 
-        init, //matr init time, no need to find max only proc 0 computes it
-        max_init_time, 
-        max_scatter_time, 
-        max_reduce_time, 
-        max_time);
+        printf("Matr Init Time: %.4f, Max Init Time: %.4f, Max Scatter Time: %.4f, Max Reduce Time: %.4f, Max Time: %.4f\n",
+            // init, //matr init time, no need to find max only proc 0 computes it
+            (double)(matr_e - matr_s)/CLOCKS_PER_SEC, //matr init time, no need to find max only proc 0 computes it
+            // matr_e - matr_s,
+            max_init_time,
+            max_scatter_time,
+            max_reduce_time,
+            max_time);
         //printf("%.4f %.4f %.4f %.4f %.4f\n", init_end - init_start, max_init_time, max_scatter_time, max_reduce_time, max_time);
         // printf("Matrix initialization time: %f seconds\n", (init_end - init_start));
         // printf("The slowest process took %f seconds to initialize\n", max_init_time);
@@ -132,9 +140,9 @@ void print_vector(char* v, size_t n, char* name) {
 
 void initialize(char* A, char* x, size_t n) {
     for (int i = 0; i < n; i++) {
-        x[i] = rand() % 10;
+        x[i] = rand() % 25;
         for (int j = 0; j < n; j++) {
-            A[i * n + j] = rand() % 10;
+            A[i * n + j] = rand() % 25;
         }
     }
 }
