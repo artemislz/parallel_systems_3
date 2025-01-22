@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "timer.h"
 void print_matrix(char* a, size_t rows, size_t cols) {
     for (size_t i = 0; i < rows; i++) {
         if (i == rows / 2) {
@@ -27,7 +28,7 @@ void print_vector(char* v, size_t n, char* name) {
 }
 
 int main(int argc, char** argv){
-    clock_t start, end, start_init, end_init;
+    double start, end, start_init, end_init;
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <n>\n", argv[0]);
         return EXIT_FAILURE;
@@ -37,7 +38,7 @@ int main(int argc, char** argv){
     char* x = malloc(n * sizeof(char));
     long unsigned int* y = malloc(n * sizeof(long unsigned int));
     srand(17);
-    start_init = clock();
+    GET_TIME(start_init);
     for (int i = 0; i < n; i++) {
         x[i] = rand() % 25;
         y[i] = 0;
@@ -45,23 +46,23 @@ int main(int argc, char** argv){
             A[i * n + j] = rand() % 25;
         }
     }
-    end_init = clock();
+    GET_TIME(end_init);
     // print_matrix(A, n, n);
     // print_vector(x, n, "x");
-    start = clock();
+    GET_TIME(start);
 
     for (int i = 0; i < n; i++) {      // for each row
         for (int j = 0; j < n; j++) {          // for each column
             y[i] += A[i * n + j] * x[i];   // access A by columns
         }
     }
-    end = clock();
+    GET_TIME(end);
 
     /*
     * [1 , 2 , 3 , 4 , 5 , 6 , 7, 8]
     */
     // print_vector(y, n, "y");
-    printf("%.4f %.4f\n", (double)(end_init - start_init) / CLOCKS_PER_SEC, (double)(end - start) / CLOCKS_PER_SEC);
+    printf("%.4f %.4f\n", (double)(end_init - start_init), (double)(end - start));
     free(A);
     free(x);
     free(y);
