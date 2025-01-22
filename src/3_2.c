@@ -3,7 +3,6 @@
 #include <mpi.h>
 #include <time.h>
 #include <string.h>
-#include "timer.h"
 void initialize(char*, char*, size_t);
 void initialize_matrix(char*, size_t, size_t);
 void initialize_matrix_column(char*, size_t, size_t);
@@ -46,9 +45,7 @@ int main(int argc, char* argv[]) {
         x = malloc(n * sizeof(char));
         // init -= MPI_Wtime();
         matr_s = clock();
-        // GET_TIME(matr_s);
         initialize(A, x, n);
-        // GET_TIME(matr_e);
         matr_e = clock();
         // init += MPI_Wtime();
     }
